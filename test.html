@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>熊猫监督员 - 测试页面</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+      background: #0a0a0a;
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow-x: hidden;
+    }
+
+    .test-panel {
+      background: #1a1a1a;
+      border-radius: 16px;
+      padding: 40px;
+      text-align: center;
+      max-width: 500px;
+      width: 90%;
+      position: relative;
+      z-index: 10;
+    }
+
+    h1 {
+      font-size: 32px;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      color: #888;
+      font-size: 14px;
+      margin-bottom: 32px;
+    }
+
+    .config-row {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .config-field {
+      flex: 1;
+      text-align: left;
+    }
+
+    .config-field label {
+      display: block;
+      font-size: 12px;
+      color: #aaa;
+      margin-bottom: 6px;
+    }
+
+    .config-field input {
+      width: 100%;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #333;
+      background: #2e2e2e;
+      color: #fff;
+      font-size: 16px;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 14px;
+      border-radius: 10px;
+      border: none;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-bottom: 10px;
+      transition: transform 0.1s, opacity 0.2s;
+    }
+
+    .btn:active { transform: scale(0.98); }
+
+    .btn-primary {
+      background: #8bc34a;
+      color: #fff;
+    }
+    .btn-primary:hover { background: #7cb342; }
+
+    .btn-danger {
+      background: #e53935;
+      color: #fff;
+    }
+    .btn-danger:hover { background: #c62828; }
+
+    .demo-notice {
+      margin-top: 20px;
+      padding: 12px;
+      background: #2e2e2e;
+      border-radius: 8px;
+      font-size: 12px;
+      color: #888;
+      line-height: 1.5;
+    }
+
+    .demo-notice strong { color: #ff9800; }
+
+    /* Panda Overlay (simulated) */
+    #panda-gatekeeper-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: #000;
+      z-index: 2147483647;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+    }
+
+    #panda-gatekeeper-overlay.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    #panda-gatekeeper-overlay video {
+      height: 100vh;
+      width: auto;
+    }
+
+    #panda-gatekeeper-overlay video.entrance {
+      animation: panda-slide-in 2s forwards;
+    }
+
+    #panda-gatekeeper-overlay video.looping {
+      animation: none;
+      transform: translateX(0);
+    }
+
+    @keyframes panda-slide-in {
+      from { transform: translateX(100vw); }
+      to   { transform: translateX(0); }
+    }
+
+    #panda-gatekeeper-countdown {
+      position: absolute;
+      top: 20vh;
+      left: 35%;
+      transform: translateX(-50%);
+      font-size: 160px;
+      font-weight: bold;
+      color: white;
+      font-family: sans-serif;
+      line-height: 1;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .dismiss-hint {
+      position: absolute;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: rgba(255,255,255,0.5);
+      font-size: 14px;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    /* Loading indicator */
+    .loading {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      vertical-align: middle;
+      margin-right: 6px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .status-text {
+      color: #ff9800;
+      font-size: 14px;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="test-panel">
+    <h1>熊猫监督员</h1>
+    <p class="subtitle">测试面板 — 随时触发熊猫休息画面</p>
+
+    <div class="config-row">
+      <div class="config-field">
+        <label>使用多少分钟后召唤熊猫（分钟）</label>
+        <input type="number" id="usageLimit" value="1" min="1" max="480">
+      </div>
+      <div class="config-field">
+        <label>休息时长（分钟）</label>
+        <input type="number" id="breakTime" value="0.5" min="0.1" max="60" step="0.1">
+      </div>
+    </div>
+
+    <button class="btn btn-primary" id="triggerBtn">
+      触发熊猫休息
+    </button>
+    <button class="btn btn-danger" id="dismissBtn" style="display:none;">
+      请熊猫离开
+    </button>
+
+    <div id="statusText" class="status-text"></div>
+
+    <div class="demo-notice">
+      <strong>测试模式</strong><br>
+      本页面演示熊猫监督员覆盖画面，包含熊猫视频和中文语音提醒。<br>
+      点击上方按钮触发休息。点击覆盖画面或按
+      <strong>Esc</strong> 键关闭。
+    </div>
+  </div>
+
+  <!-- Panda Overlay -->
+  <div id="panda-gatekeeper-overlay">
+    <div id="panda-gatekeeper-countdown"></div>
+    <div class="dismiss-hint">点击任意位置或按 Esc 键关闭</div>
+  </div>
+
+  <script>
+    (function() {
+      const VIDEO_SOURCES = ['assets/neko2.webm'];
+
+      const overlay = document.getElementById('panda-gatekeeper-overlay');
+      const countdownEl = document.getElementById('panda-gatekeeper-countdown');
+      const triggerBtn = document.getElementById('triggerBtn');
+      const dismissBtn = document.getElementById('dismissBtn');
+      const statusText = document.getElementById('statusText');
+
+      let active = false;
+      let countdownTimer = null;
+      let currentVideos = [];
+      let currentVideoIdx = 0;
+
+      function speakMessage() {
+        const text = '主人，你该休息了';
+
+        // Try pre-generated opus audio first
+        const audio = new Audio('assets/panda_speech_元气少女.opus');
+        audio.volume = 0.8;
+
+        audio.onerror = () => {
+          // Fallback to Web Speech API
+          if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'zh-CN';
+            utterance.rate = 0.85;
+            utterance.pitch = 0.9;
+            utterance.volume = 0.8;
+            const setVoice = () => {
+              const voices = window.speechSynthesis.getVoices();
+              const chineseVoice = voices.find(v => v.lang.startsWith('zh-CN')) ||
+                                   voices.find(v => v.lang.startsWith('zh')) ||
+                                   voices[0];
+              if (chineseVoice) utterance.voice = chineseVoice;
+              window.speechSynthesis.speak(utterance);
+            };
+            const voices = window.speechSynthesis.getVoices();
+            if (voices.length > 0) { setVoice(); }
+            else { window.speechSynthesis.onvoiceschanged = setVoice; }
+          }
+        };
+
+        audio.play().catch(() => {});
+      }
+
+      function stopSpeech() {
+        if ('speechSynthesis' in window) {
+          window.speechSynthesis.cancel();
+        }
+      }
+
+      function createVideoElements() {
+        // Remove old videos
+        const oldVideos = overlay.querySelectorAll('video');
+        oldVideos.forEach(v => v.remove());
+
+        currentVideos = VIDEO_SOURCES.map((src, i) => {
+          const v = document.createElement('video');
+          v.src = src;
+          v.muted = true;
+          v.playsInline = true;
+          v.preload = 'auto';
+          if (i === 0) {
+            v.classList.add('entrance');
+          } else {
+            v.style.display = 'none';
+          }
+          overlay.appendChild(v);
+          return v;
+        });
+      }
+
+      function cycleToNext() {
+        if (!active || currentVideos.length === 0) return;
+        const current = currentVideos[currentVideoIdx];
+        current.style.display = 'none';
+        current.classList.remove('entrance', 'looping');
+
+        currentVideoIdx = (currentVideoIdx + 1) % currentVideos.length;
+        const next = currentVideos[currentVideoIdx];
+
+        if (currentVideoIdx === 0) {
+          next.classList.add('entrance');
+        } else {
+          next.classList.add('looping');
+        }
+        next.style.display = 'block';
+        next.currentTime = 0;
+        next.play().catch(() => {});
+      }
+
+      function showPanda(breakMinutes) {
+        if (active) return;
+
+        active = true;
+        const totalSeconds = Math.max(1, Math.round(breakMinutes * 60));
+        let remaining = totalSeconds;
+
+        createVideoElements();
+        overlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+
+        // Start first video
+        currentVideoIdx = 0;
+        currentVideos[0].play().catch(() => {});
+
+        currentVideos.forEach((v, i) => {
+          v.addEventListener('ended', () => {
+            if (!active) return;
+            cycleToNext();
+          });
+        });
+
+        // Countdown
+        function updateCountdown() {
+          if (!active) return;
+          const m = Math.floor(remaining / 60);
+          const s = remaining % 60;
+          countdownEl.textContent = `${m}:${String(s).padStart(2, '0')}`;
+
+          if (remaining > 0) {
+            remaining--;
+            countdownTimer = setTimeout(updateCountdown, 1000);
+          } else {
+            dismissPanda();
+          }
+        }
+        updateCountdown();
+
+        // TTS
+        speakMessage();
+
+        triggerBtn.style.display = 'none';
+        dismissBtn.style.display = 'block';
+        statusText.textContent = '熊猫休息中...';
+      }
+
+      function dismissPanda() {
+        if (!active) return;
+
+        active = false;
+        stopSpeech();
+        if (countdownTimer) clearTimeout(countdownTimer);
+
+        overlay.classList.remove('active');
+        document.body.style.overflow = '';
+
+        // Stop and remove videos
+        currentVideos.forEach(v => {
+          v.pause();
+          v.remove();
+        });
+        currentVideos = [];
+
+        triggerBtn.style.display = 'block';
+        dismissBtn.style.display = 'none';
+        statusText.textContent = '休息结束，可以继续测试。';
+      }
+
+      triggerBtn.addEventListener('click', () => {
+        const breakTime = parseFloat(document.getElementById('breakTime').value) || 0.5;
+        showPanda(breakTime);
+      });
+
+      dismissBtn.addEventListener('click', dismissPanda);
+
+      overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) dismissPanda();
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && active) dismissPanda();
+      });
+
+      // Pre-check if videos are accessible
+      statusText.innerHTML = '<span class="loading"></span>正在检查视频资源...';
+      const testVideo = document.createElement('video');
+      testVideo.src = VIDEO_SOURCES[0];
+      testVideo.oncanplay = () => {
+        statusText.textContent = '资源加载完毕，可以开始测试！';
+      };
+      testVideo.onerror = () => {
+        statusText.textContent = '注意：未找到视频文件，请确保 assets/ 目录可访问。';
+      };
+      testVideo.load();
+    })();
+  </script>
+</body>
+</html>

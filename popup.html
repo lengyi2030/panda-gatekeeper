@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <style>
+    html {
+      scrollbar-color: #4a4a4a #1a1a1a;
+      scrollbar-width: thin;
+    }
+
+    *::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    *::-webkit-scrollbar-track {
+      background: #1a1a1a;
+      border-radius: 8px;
+    }
+
+    *::-webkit-scrollbar-thumb {
+      background: #4a4a4a;
+      border: 2px solid #1a1a1a;
+      border-radius: 8px;
+    }
+
+    *::-webkit-scrollbar-thumb:hover {
+      background: #666;
+    }
+
+    body {
+      width: 320px;
+      font-family: sans-serif;
+      padding: 14px;
+      background: #1a1a1a;
+      color: #fff;
+    }
+
+    h1 {
+      font-size: 18px;
+      margin: 0 0 16px;
+      text-align: center;
+      color: #fff;
+    }
+
+    .section {
+      margin-bottom: 14px;
+    }
+
+    .section label {
+      display: block;
+      font-size: 12px;
+      color: #aaa;
+      margin-bottom: 6px;
+    }
+
+    .label-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 6px;
+    }
+
+    .label-row label {
+      margin-bottom: 0;
+    }
+
+    .info-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 14px;
+      height: 14px;
+      color: #888;
+      font-size: 13px;
+      line-height: 1;
+      text-decoration: none;
+    }
+
+    .info-link:hover {
+      color: #8bc34a;
+    }
+
+    .section input[type="number"] {
+      width: 100%;
+      padding: 8px;
+      border-radius: 8px;
+      border: none;
+      background: #2e2e2e;
+      color: #fff;
+      font-size: 14px;
+      box-sizing: border-box;
+    }
+
+    .section textarea {
+      width: 100%;
+      min-height: 76px;
+      padding: 8px;
+      border-radius: 8px;
+      border: none;
+      background: #2e2e2e;
+      color: #fff;
+      font-size: 13px;
+      line-height: 1.45;
+      resize: vertical;
+      box-sizing: border-box;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      border-radius: 8px;
+      border: none;
+      color: white;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    #saveBtn {
+      background: #8bc34a;
+      margin-bottom: 8px;
+    }
+
+    #saveBtn:hover {
+      background: #7cb342;
+    }
+
+    #testBtn {
+      background: #ff9800;
+      margin-bottom: 8px;
+    }
+
+    #testBtn:hover {
+      background: #f57c00;
+    }
+
+    #dismissBtn {
+      background: #444;
+      margin-bottom: 8px;
+      display: none;
+    }
+
+    #dismissBtn:hover {
+      background: #555;
+    }
+
+    .saved {
+      text-align: center;
+      font-size: 12px;
+      color: #aaa;
+      margin-top: 8px;
+      display: none;
+    }
+
+    .hint {
+      margin: 6px 0 0;
+      font-size: 11px;
+      line-height: 1.4;
+      color: #888;
+    }
+
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      line-height: 1.4;
+      color: #ddd;
+      cursor: pointer;
+    }
+
+    .toggle-row input {
+      width: 16px;
+      height: 16px;
+      margin: 0;
+      accent-color: #8bc34a;
+    }
+
+    .footer-link {
+      display: block;
+      margin-top: 12px;
+      text-align: center;
+      font-size: 13px;
+      font-weight: 500;
+      font-family: Arial, sans-serif;
+      letter-spacing: 0.08em;
+      word-spacing: 2px;
+      color: #aaa;
+      text-decoration: none;
+    }
+
+    .footer-link:hover {
+      color: #fff;
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <h1>熊猫监督员</h1>
+
+  <div class="section">
+    <label data-i18n="usageLimitLabel"></label>
+    <input type="number" id="usageLimit" min="1" max="480" value="30">
+  </div>
+
+  <div class="section">
+    <label data-i18n="breakTimeLabel"></label>
+    <input type="number" id="breakTime" min="1" max="60" value="5">
+  </div>
+
+  <div class="section">
+    <label class="toggle-row">
+      <input type="checkbox" id="pandaEnabled">
+      <span data-i18n="pandaEnabledLabel"></span>
+    </label>
+  </div>
+
+  <div class="section">
+    <div class="label-row">
+      <label for="customDomains" data-i18n="targetSNSLabel"></label>
+      <a
+        class="info-link"
+        href="https://github.com"
+        target="_blank"
+        rel="noopener"
+        data-i18n-title="targetSitesHelpTitle"
+      >&#9432;</a>
+    </div>
+    <textarea id="customDomains" spellcheck="false" placeholder="x.com&#10;youtube.com&#10;example.com"></textarea>
+    <p class="hint" data-i18n="customDomainsHint"></p>
+  </div>
+
+  <button id="testBtn" data-i18n="testButton"></button>
+  <button id="dismissBtn" data-i18n="dismissButton"></button>
+  <button id="saveBtn" data-i18n="saveButton"></button>
+  <div class="saved" id="savedMsg" data-i18n="savedMessage"></div>
+  <a class="footer-link" href="https://github.com" target="_blank" rel="noopener" data-i18n="officialSiteLink"></a>
+
+  <script src="shared.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

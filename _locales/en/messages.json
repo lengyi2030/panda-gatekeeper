@@ -1,0 +1,41 @@
+{
+  "appName": {
+    "message": "熊猫监督员"
+  },
+  "appDescription": {
+    "message": "在网站上沉迷太久？熊猫会霸占你的屏幕，强制你休息。最可爱的防沉迷应用。"
+  },
+  "usageLimitLabel": {
+    "message": "使用多少分钟后召唤熊猫？"
+  },
+  "breakTimeLabel": {
+    "message": "休息时长（分钟）"
+  },
+  "targetSNSLabel": {
+    "message": "监督网站"
+  },
+  "pandaEnabledLabel": {
+    "message": "启用熊猫监督"
+  },
+  "saveButton": {
+    "message": "保存设置"
+  },
+  "savedMessage": {
+    "message": "已保存！"
+  },
+  "dismissButton": {
+    "message": "请熊猫离开"
+  },
+  "testButton": {
+    "message": "测试熊猫"
+  },
+  "customDomainsHint": {
+    "message": "每行一个网站，也可用逗号分隔。支持直接粘贴URL。"
+  },
+  "officialSiteLink": {
+    "message": "GitHub"
+  },
+  "targetSitesHelpTitle": {
+    "message": "关于网站使用计时"
+  }
+}
