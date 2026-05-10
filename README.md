@@ -6,18 +6,17 @@
 
 ## 中文
 
-一款浏览器扩展，帮你在社交媒体上控制使用时间。当你在指定网站上沉迷太久，一只可爱的熊猫会霸占你的整个屏幕，强制你休息。
+一款浏览器扩展插件，适配Chrome、Firefox、Edge等浏览器，帮你在社交媒体上控制上网时间。当你在网站上沉迷太久，一只可爱的熊猫会霸占你的整个屏幕，强制你休息。
 
 > 基于 [Cat Gatekeeper](https://github.com/zokuzoku/cat-gatekeeper) 二次开发，特别感谢原作者 [@zokuzoku](https://github.com/zokuzoku)。
 
 ### 主要功能
 
-- **自定义计时器** — 设置使用时长（1–480分钟）和休息时长（1–60分钟）
-- **熊猫视频** — 休息期间播放可爱的熊猫动画
+- **自定义频率** — 自由设置间隔时长（1–480分钟）和休息时长（1–60分钟）
+- **熊猫动画** — 休息期间播放可爱的熊猫动画
 - **语音提醒** — 熊猫会温柔地提醒你该休息了
-- **独立站点追踪** — 每个网站的浏览时间独立计算
+- **独立计算** — 每个网站的浏览时间独立计算
 - **一键测试** — 随时预览熊猫休息画面
-- **独立测试页** — 直接在浏览器中打开 `test.html` 即可体验
 
 ### 安装方法
 
@@ -32,7 +31,7 @@
 
 3. 开启**开发者模式**（Chrome/Edge）
 
-4. 点击**加载已解压的扩展程序**，选择 `panda-gatekeeper` 文件夹
+4. 点击**加载未打包的扩展程序**，选择 `panda-gatekeeper` 文件夹
 
 ### 使用说明
 
@@ -51,9 +50,12 @@ pip install edge-tts
 python generate_audio.py
 ```
 
-### 致谢
+### 关于作者
 
-- 原始项目：[Cat Gatekeeper](https://github.com/zokuzoku/cat-gatekeeper) by [@zokuzoku](https://github.com/zokuzoku)
+冷逸，国内Top AI公众号「沃垠AI」博主，不会写代码的Vibe Coding开发者，经常死磕提示词、Skills和Agent。
+全平台统一账户：沃垠AI
+标签：产品、运营出身，新媒体科技评论，超级OPC
+内容矩阵：公众号、小红书、知乎、Github、B站、X等
 
 ---
 
